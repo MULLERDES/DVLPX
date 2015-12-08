@@ -90,7 +90,7 @@ namespace WebSiteSearch
                 int length = await firstFinishedTask;
                 Console.WriteLine( String.Format("\r\nLength of the download:  {0}", length));
 
-                downloadTasks.Add(ProcessURL("http://msdn.microsoft.com", client, ct));
+             //   downloadTasks.Add(ProcessURL("http://msdn.microsoft.com", client, ct));
             }
         }
 
