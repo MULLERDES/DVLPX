@@ -12,20 +12,41 @@
             <ListView.ItemTemplate>
                 <DataTemplate >
                     <StackPanel>
-                        <TextBlock Text="URL:FindAdress " />
-                        <TextBlock Text="{Binding URL}" FontWeight="Bold" />
-                     
-                        <TextBlock Text="{Binding Substring}"></TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="URL: Status[" />
+                            <TextBlock Text="{Binding Status}"></TextBlock>
+                            <TextBlock Text="] Page Size: ["></TextBlock>
+                            <TextBlock Text="{Binding PageSize}"></TextBlock>
+                            <TextBlock Text="] "></TextBlock>
+                            <TextBlock Text="{Binding URL}" FontWeight="Bold" />
+
+                        </StackPanel>
+                        <TextBlock Text="{Binding Substring}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsUseful}" Value="True" >
+                                            <Setter Property="Foreground" Value="Green"></Setter>
+
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsUseful}" Value="False" >
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <TextBlock x:Name="tb1" Width="Auto" TextWrapping="Wrap" Margin="0,0,0,10" Height="30" VerticalAlignment="Bottom" />
+        <TextBlock x:Name="tb1" Width="Auto" TextWrapping="Wrap" Margin="11,0,10,10" Height="30" VerticalAlignment="Bottom" />
 
         <TextBox x:Name="tbURL" Height="23" Margin="111,44,10,0" TextWrapping="Wrap" Text="https://msdn.microsoft.com/ru-ru/default.aspx" VerticalAlignment="Top"/>
         <Button  Click="CancelClick" Content="Cancel" HorizontalAlignment="Left" Margin="388,122,0,0" VerticalAlignment="Top" Width="75"/>
-        <ProgressBar x:Name="mainProgressbar" HorizontalAlignment="Left" Height="25" Margin="11,180,0,0" VerticalAlignment="Top" Width="553"/>
+        <ProgressBar x:Name="mainProgressbar" Height="25" Margin="11,180,10,0" VerticalAlignment="Top" Foreground="#FF65BD75"/>
         <GroupBox  Header="GroupBox" HorizontalAlignment="Left" Margin="11,72,0,0" VerticalAlignment="Top" Height="103" Width="353">
             <Grid>
                 <Slider x:Name="slThreadNumber" Maximum="64" Minimum="1" Value="4"  Ticks="1,2,4,8,16,32,64"  IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Width="141" SmallChange="1"/>
@@ -38,7 +59,7 @@
 
 
         </GroupBox>
-        <TextBox x:Name="tbPhrase" HorizontalAlignment="Left" Height="23" Margin="112,14,0,0" TextWrapping="Wrap" Text="Visual Studio" VerticalAlignment="Top" Width="451"/>
+        <TextBox x:Name="tbPhrase" Height="23" Margin="112,14,10,0" TextWrapping="Wrap" Text="Visual Studio" VerticalAlignment="Top"/>
         <Label   Content="Phrase to search" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label   Content="Start URL" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top"/>
     </Grid>

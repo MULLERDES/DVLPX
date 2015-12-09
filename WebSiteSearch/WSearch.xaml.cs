@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WSS;
 
 namespace WebSiteSearch
@@ -49,7 +40,7 @@ namespace WebSiteSearch
                 }
                 catch(Exception)
                 {
-
+                    //иногда попают адреса, которые не откроются в браузере
                 }
             }
             //    
@@ -57,6 +48,7 @@ namespace WebSiteSearch
 
         private void SlThreadNumber_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            //изменение количетва потоков загрузки страниц
             if(SearchProvider is ISearcher<SearchResult>)
                 SearchProvider.MaximumDownloadThreads = (int)slThreadNumber.Value;
         }
@@ -97,7 +89,6 @@ namespace WebSiteSearch
                 return;
             }
 
-
             StartUI();
             mainProgressbar.Value = 0;
             mainProgressbar.Maximum = MaxUrls;
@@ -105,23 +96,22 @@ namespace WebSiteSearch
             resultCollection = new ObservableCollection<SearchResult>();
             lvResults.ItemsSource = resultCollection;
 
-            SearchProvider = new WebFinder() { StartUrl = tbURL.Text, MaxUrls = MaxUrls };
-
+            SearchProvider = new Boogle() { StartUrl = tbURL.Text, MaxUrls = MaxUrls };
             SearchProvider.MaximumDownloadThreads = (int)slThreadNumber.Value;
-            int b = 0;
+
+
             SearchProvider.ItemScaned += (s, args) =>
             {
-                   Console.WriteLine($"Found on {b++ }");
                 mainProgressbar.Value++;
-                resultCollection.Insert(0,args.SR);
+                resultCollection.Insert(0, args.SR);
             };
+
             cts = new CancellationTokenSource();
             try
             {
                 tb1.Text = "Download started";// +Environment.NewLine;
                 await SearchProvider.Start(tbPhrase.Text, cts.Token);
                 tb1.Text = "Download complete";// +Environment.NewLine;
-
             }
             catch(OperationCanceledException)
             {
@@ -131,9 +121,7 @@ namespace WebSiteSearch
             {
                 tb1.Text = "Download failed";// + Environment.NewLine;
             }
-
             cts = null;
-
             btn.Content = "Start";
             StopUI();
         }
@@ -153,24 +141,17 @@ namespace WebSiteSearch
 
         private void lvResults_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
         }
 
-
-
-        private void itemButtonClick(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
             bStart.Content = "Start";
-            cts?.Cancel();
             tbMaxURLS.IsEnabled = true;
+
+            cts?.Cancel();
+            SearchProvider?.Stop();
         }
-
-
 
 
     }
